@@ -1,10 +1,7 @@
-# Dependencies
-markdown:         redcarpet
-highlighter:      pygments
 
 # Permalinks
 permalink:        pretty
-relative_permalinks: true
+
 
 # Setup
 title:            I Dream in SQL
@@ -18,9 +15,3 @@ author:
   url:            
 
 paginate:         5
-
-# Custom vars
-version:          2.1.0
-
-github:
-  repo:           
