@@ -159,7 +159,7 @@ where
   o.rank_order = 1
 ```
 
-So now we have are desired result. Apart from the little extra cruft needed to
+So now we have our desired result. Apart from the little extra cruft needed to
 filter the rows, this last query is more readable. It is also quick to change
 if you need to answer a variety of similar questions.
 
