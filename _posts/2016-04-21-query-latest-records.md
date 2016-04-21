@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Query the latest records in a data set
+category: SQL
 ---
 
 You have some data that tracks a sequence of events for a group of entities.
@@ -15,7 +16,7 @@ and some way to determine the chronological order of the orders. For simplicity,
 assume the order id is an incremental sequence (1, 2, 3, etc).
 
 | ORDER_ID | CUSTOMER | DATE | AMOUNT | DESCRIPTION |
-|----------
+|----------|---|---|---|---|
 | 1 | BOB | 2015-05-02 | 105 | Learn SQL |
 | 2 | CHRIS | 2015-05-02 | 55 | Video Editing |
 | 3 | JILL | 2015-05-04 | 33 | Cooking |
@@ -29,7 +30,7 @@ assume the order id is an incremental sequence (1, 2, 3, etc).
 
 I typically see analysts new to SQL initially attempt to answer this question with a query like
 
-```
+```SQL
 select
   max(order_id)
 , customer
@@ -50,7 +51,7 @@ being grouped on.
 
 So let's change this to at least tell us the latest order id for each customer.
 
-```
+```SQL
 select
   customer
 , max(order_id)
@@ -62,7 +63,7 @@ group by
 Our small sample set would then result in
 
 | CUSTOMER | MAX(ORDER_ID) |
-|----
+|----|---|
 | BOB | 5 |
 | CHRIS | 8 |
 | JILL | 9 |
@@ -76,7 +77,7 @@ this query as way to limit another query back against
 the orders table. There is a couple ways to do this. The most common form is
 similar to this.
 
-```
+```SQL
 select
   order_id
 , customer
@@ -100,7 +101,7 @@ This works, but it is not my preferred approach.
 My preferred solution does not use the aggregate MAX function but instead
 utilizes the analytic RANK function.
 
-```
+```SQL
 select
   order_id
 , customer
@@ -114,7 +115,7 @@ from orders
 The result will look like
 
 | ORDER_ID | CUSTOMER | DATE | AMOUNT | DESCRIPTION | RANK_ORDER |
-|----------
+|----------|---|---|---|---|---|
 | 1 | BOB | 2015-05-02 | 105 | Learn SQL | 3 |
 | 2 | CHRIS | 2015-05-02 | 55 | Video Editing | 2 |
 | 3 | JILL | 2015-05-04 | 33 | Cooking | 3 |
@@ -144,7 +145,7 @@ Unfortunately, you cannot simply add a WHERE clause on a RANK() function.
 Analytic functions are not permitted in a WHERE clause. So we have to wrap our
 query as a subquery.
 
-```
+```SQL
 select * from (
 select
   order_id
@@ -165,18 +166,18 @@ if you need to answer a variety of similar questions.
 
 Customers' first orders
 
-```
+```SQL
 rank() over (partition by customer order by order_id) rank_order
 ```
 
 Customers' largest orders
 
-```
+```SQL
 rank() over (partition by customer order by amount desc) rank_order
 ```
 
 Largest order by day
 
-```
+```SQL
 rank() over (partition by date order by amount desc) rank_order
 ```
